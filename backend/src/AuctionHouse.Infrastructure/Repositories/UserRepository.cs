@@ -14,12 +14,18 @@ namespace AuctionHouse.Infrastructure.Repositories
             _context = context;
         }
 
+
         public async Task<User> CreateUserAsync(string username, string email, string passwordHash)
         {
             var user = new User { UserName = username, Email = email, PasswordHash = passwordHash };
             _context.Users.Add(user);
             await _context.SaveChangesAsync();
             return user;
+        }
+
+        public async Task<User?> GetUserByIdAsync(string userId)
+        {
+            return await _context.Users.FirstOrDefaultAsync(u => u.Id == userId);
         }
 
         public async Task<User?> GetUserByUsernameAsync(string username)

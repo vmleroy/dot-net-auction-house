@@ -5,7 +5,7 @@ using System.Text;
 using AuctionHouse.Domain.Entities;
 using Microsoft.IdentityModel.Tokens;
 
-namespace AuctionHouse.Application.Services
+namespace AuctionHouse.Application.Utils
 {
     public class JwtTokenGenerator
     {

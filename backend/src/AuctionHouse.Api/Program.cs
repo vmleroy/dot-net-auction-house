@@ -35,16 +35,23 @@ builder.Services.AddAuthorization();
 
 // Custom services
 builder.Services.AddScoped<BidCacheService>();
-builder.Services.AddScoped<AuctionHouse.Application.Services.JwtTokenGenerator>(sp => {
+
+// JWT Token Generator
+builder.Services.AddScoped<AuctionHouse.Application.Utils.JwtTokenGenerator>(sp => {
     var config = sp.GetRequiredService<IConfiguration>();
     var jwtSection = config.GetSection("Jwt");
     var secret = jwtSection["Secret"] ?? throw new InvalidOperationException("JWT Secret not configured");
     var issuer = jwtSection["Issuer"] ?? "AuctionHouse";
     var audience = jwtSection["Audience"] ?? "AuctionHouseAudience";
-    return new AuctionHouse.Application.Services.JwtTokenGenerator(secret, issuer, audience);
+    return new AuctionHouse.Application.Utils.JwtTokenGenerator(secret, issuer, audience);
 });
-builder.Services.AddScoped<AuctionHouse.Application.Services.IAuthService, AuctionHouse.Application.Services.AuthService>();
+
+// Repositories & Application Services
+builder.Services.AddScoped<AuctionHouse.Domain.Repositories.IRefreshTokenRepository, AuctionHouse.Infrastructure.Repositories.RefreshTokenRepository>();
 builder.Services.AddScoped<AuctionHouse.Domain.Repositories.IUserRepository, AuctionHouse.Infrastructure.Repositories.UserRepository>();
+
+builder.Services.AddScoped<AuctionHouse.Application.Interfaces.IAuthService, AuctionHouse.Application.Services.AuthService>();
+builder.Services.AddScoped<AuctionHouse.Application.Interfaces.IRefreshTokenService, AuctionHouse.Application.Services.RefreshTokenService>();
 
 /**
   *  App

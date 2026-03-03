@@ -34,3 +34,14 @@ Para esse projeto, a **Clean Architecture** é essencial para manter o código t
 1. **Concorrência:** Você terá que lidar com o problema de dois usuários darem o mesmo lance no exato milissegundo (usando *Pessimistic Locking* ou *Redis Distributed Locks*).
 2. **Escalabilidade:** Mostra que você sabe quando usar um Banco Relacional (SQL) para dinheiro e NoSQL (Redis) para velocidade.
 3. **Complexidade Real:** Resolve problemas reais de sistemas que não podem falhar e precisam ser rápidos.
+
+---
+
+### Auxilio para Organização do Código
+
+In a clean ASP.NET Core architecture (like Clean Architecture or Onion Architecture):
+
+1. **Controllers** should be in the API project (e.g., AuctionHouse.Api/Controllers). They handle HTTP requests and responses.
+2. **Domain project** (e.g., AuctionHouse.Domain) contains only core business entities, value objects, and interfaces—no controllers, no infrastructure, no data access.
+3. **Services** (application logic, e.g., authentication, user management) should go in the Application project (e.g., AuctionHouse.Application/Services).
+4. **Repositories** (data access logic) should be defined as interfaces in the Domain or Application project, and implemented in the Infrastructure project (e.g., AuctionHouse.Infrastructure/Repositories).

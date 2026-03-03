@@ -8,5 +8,6 @@ namespace AuctionHouse.Domain.Repositories
         Task<User> CreateUserAsync(string username, string email, string password);
         Task<User?> GetUserByUsernameAsync(string username);
         Task<User?> GetUserByEmailAsync(string email);
+        Task<User?> GetUserByIdAsync(string userId);
     }
 }
