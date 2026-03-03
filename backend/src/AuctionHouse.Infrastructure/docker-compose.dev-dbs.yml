@@ -1,0 +1,25 @@
+services:
+  # PostgreSQL: The "Vault" for Auctions and Wallets
+  db:
+    image: postgres:15-alpine
+    container_name: auctionhouse_db
+    restart: always
+    environment:
+      POSTGRES_USER: user_auction
+      POSTGRES_PASSWORD: password_auction
+      POSTGRES_DB: AuctionHouseDb
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+  # Redis: The "Live Engine" for Real-time bids
+  cache:
+    image: redis:7-alpine
+    container_name: auctionhouse_cache
+    restart: always
+    ports:
+      - "6379:6379"
+
+volumes:
+  postgres_data:

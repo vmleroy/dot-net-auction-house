@@ -1,0 +1,8 @@
+<Solution>
+  <Folder Name="/src/">
+    <Project Path="src/AuctionHouse.Api/AuctionHouse.Api.csproj" />
+    <Project Path="src/AuctionHouse.Application/AuctionHouse.Application.csproj" />
+    <Project Path="src/AuctionHouse.Domain/AuctionHouse.Domain.csproj" />
+    <Project Path="src/AuctionHouse.Infrastructure/AuctionHouse.Infrastructure.csproj" />
+  </Folder>
+</Solution>

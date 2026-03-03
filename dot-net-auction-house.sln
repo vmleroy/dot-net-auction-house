@@ -1,0 +1,53 @@
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.5.2.0
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "backend", "backend", "{1AE8ACA6-933B-BF2A-3671-3E2EAC007D16}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{0F9113EE-888A-26D2-68B0-4A7D0A2A8745}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AuctionHouse.Api", "backend\src\AuctionHouse.Api\AuctionHouse.Api.csproj", "{C1A02935-1C33-873B-2E94-49C201239BD8}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AuctionHouse.Application", "backend\src\AuctionHouse.Application\AuctionHouse.Application.csproj", "{5A1C25B8-D0FA-76F1-2BC9-1F4DC2D03D77}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AuctionHouse.Infrastructure", "backend\src\AuctionHouse.Infrastructure\AuctionHouse.Infrastructure.csproj", "{94F0A07C-F58F-9E58-8970-785539930BD9}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AuctionHouse.Domain", "backend\src\AuctionHouse.Domain\AuctionHouse.Domain.csproj", "{E8BEC5EA-87B7-7CCC-FEE3-63CAD7037992}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{C1A02935-1C33-873B-2E94-49C201239BD8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C1A02935-1C33-873B-2E94-49C201239BD8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C1A02935-1C33-873B-2E94-49C201239BD8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C1A02935-1C33-873B-2E94-49C201239BD8}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5A1C25B8-D0FA-76F1-2BC9-1F4DC2D03D77}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5A1C25B8-D0FA-76F1-2BC9-1F4DC2D03D77}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5A1C25B8-D0FA-76F1-2BC9-1F4DC2D03D77}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5A1C25B8-D0FA-76F1-2BC9-1F4DC2D03D77}.Release|Any CPU.Build.0 = Release|Any CPU
+		{94F0A07C-F58F-9E58-8970-785539930BD9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{94F0A07C-F58F-9E58-8970-785539930BD9}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{94F0A07C-F58F-9E58-8970-785539930BD9}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{94F0A07C-F58F-9E58-8970-785539930BD9}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E8BEC5EA-87B7-7CCC-FEE3-63CAD7037992}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E8BEC5EA-87B7-7CCC-FEE3-63CAD7037992}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E8BEC5EA-87B7-7CCC-FEE3-63CAD7037992}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E8BEC5EA-87B7-7CCC-FEE3-63CAD7037992}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{0F9113EE-888A-26D2-68B0-4A7D0A2A8745} = {1AE8ACA6-933B-BF2A-3671-3E2EAC007D16}
+		{C1A02935-1C33-873B-2E94-49C201239BD8} = {0F9113EE-888A-26D2-68B0-4A7D0A2A8745}
+		{5A1C25B8-D0FA-76F1-2BC9-1F4DC2D03D77} = {0F9113EE-888A-26D2-68B0-4A7D0A2A8745}
+		{94F0A07C-F58F-9E58-8970-785539930BD9} = {0F9113EE-888A-26D2-68B0-4A7D0A2A8745}
+		{E8BEC5EA-87B7-7CCC-FEE3-63CAD7037992} = {0F9113EE-888A-26D2-68B0-4A7D0A2A8745}
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {A758E2B9-A0AA-4361-9450-28A30DA2B142}
+	EndGlobalSection
+EndGlobal

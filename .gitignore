@@ -1,0 +1,14 @@
+#BACKEND
+
+# Arquivos de configuração sensíveis
+**/appsettings.Development.json
+**/appsettings.Local.json
+**/.env
+**/secrets.json
+
+# User secrets do .NET
+**/secrets.json
+
+# Pastas e arquivos gerados
+**/bin/
+**/obj/
