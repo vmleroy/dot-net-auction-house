@@ -1,6 +1,10 @@
-using AuctionHouse.Domain.Entities;
+using AuctionHouse.Domain.Repositories;
 using AuctionHouse.Infrastructure.Data;
 using AuctionHouse.Infrastructure.Services;
+using AuctionHouse.Infrastructure.Repositories;
+using AuctionHouse.Application.Interfaces;
+using AuctionHouse.Application.Services;
+using AuctionHouse.Application.Utils;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
@@ -26,32 +30,36 @@ builder.Services.AddSingleton<IConnectionMultiplexer>(sp =>
 
 // Authentication & Identity
 builder.Services.AddAuthentication(options =>
-    {
-        options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
-        options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
-    })
+{
+    options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+    options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+})
     .AddCookie(IdentityConstants.ApplicationScheme);
 builder.Services.AddAuthorization();
 
 // Custom services
-builder.Services.AddScoped<BidCacheService>();
+builder.Services.AddScoped<ILockService, RedisLockService>();
+builder.Services.AddScoped<IBidCacheService, BidCacheService>();
+builder.Services.AddScoped<IBidService, BidService>();
 
 // JWT Token Generator
-builder.Services.AddScoped<AuctionHouse.Application.Utils.JwtTokenGenerator>(sp => {
+builder.Services.AddScoped<JwtTokenGenerator>(sp =>
+{
     var config = sp.GetRequiredService<IConfiguration>();
     var jwtSection = config.GetSection("Jwt");
     var secret = jwtSection["Secret"] ?? throw new InvalidOperationException("JWT Secret not configured");
     var issuer = jwtSection["Issuer"] ?? "AuctionHouse";
     var audience = jwtSection["Audience"] ?? "AuctionHouseAudience";
-    return new AuctionHouse.Application.Utils.JwtTokenGenerator(secret, issuer, audience);
+    return new JwtTokenGenerator(secret, issuer, audience);
 });
 
 // Repositories & Application Services
-builder.Services.AddScoped<AuctionHouse.Domain.Repositories.IRefreshTokenRepository, AuctionHouse.Infrastructure.Repositories.RefreshTokenRepository>();
-builder.Services.AddScoped<AuctionHouse.Domain.Repositories.IUserRepository, AuctionHouse.Infrastructure.Repositories.UserRepository>();
+builder.Services.AddScoped<IRefreshTokenRepository, RefreshTokenRepository>();
+builder.Services.AddScoped<IUserRepository, UserRepository>();
+builder.Services.AddScoped<IBidRepository, BidRepository>();
 
-builder.Services.AddScoped<AuctionHouse.Application.Interfaces.IAuthService, AuctionHouse.Application.Services.AuthService>();
-builder.Services.AddScoped<AuctionHouse.Application.Interfaces.IRefreshTokenService, AuctionHouse.Application.Services.RefreshTokenService>();
+builder.Services.AddScoped<IAuthService, AuthService>();
+builder.Services.AddScoped<IRefreshTokenService, RefreshTokenService>();
 
 /**
   *  App
@@ -61,7 +69,7 @@ var app = builder.Build();
 if (app.Environment.IsDevelopment())
 {
     app.MapOpenApi();
-    app.MapScalarApiReference(options => 
+    app.MapScalarApiReference(options =>
         options.AddHttpAuthentication("BearerAuth", auth =>
         {
             auth.Token = "YOUR_AUTH_TOKEN";

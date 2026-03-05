@@ -2,6 +2,13 @@ namespace AuctionHouse.Domain.Entities;
 
 public class Bid
 {
+    public Bid(Guid auctionId, string userId, decimal amount)
+    {
+        AuctionId = auctionId;
+        UserId = userId;
+        Amount = amount;
+    }
+
     public Guid Id { get; set; } = Guid.NewGuid();
     public Guid AuctionId { get; set; }
     public Auction Auction { get; set; } = null!;
