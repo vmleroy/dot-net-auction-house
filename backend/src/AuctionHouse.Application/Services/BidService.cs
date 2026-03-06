@@ -7,12 +7,14 @@ namespace AuctionHouse.Application.Services;
 public class BidService : IBidService
 {
     private readonly IBidRepository _repository;
+    private readonly IAuctionRepository _auctionRepository;
     private readonly ILockService _lockService;
     private readonly IBidCacheService _cacheService;
 
-    public BidService(IBidRepository repository, ILockService lockService, IBidCacheService cacheService)
+    public BidService(IBidRepository repository, IAuctionRepository auctionRepository, ILockService lockService, IBidCacheService cacheService)
     {
         _repository = repository;
+        _auctionRepository = auctionRepository;
         _lockService = lockService;
         _cacheService = cacheService;
     }
@@ -24,6 +26,15 @@ public class BidService : IBidService
 
     public async Task<Bid> PlaceBid(Guid auctionId, Guid userId, decimal amount)
     {
+        var auction = await _auctionRepository.GetByIdAsync(auctionId)
+            ?? throw new KeyNotFoundException($"Auction {auctionId} not found.");
+
+        if (auction.SellerId == userId.ToString())
+            throw new InvalidOperationException("You cannot bid on your own auction.");
+
+        if (!auction.IsActive)
+            throw new InvalidOperationException("This auction is not active.");
+
         return await _lockService.ExecuteWithLockAsync($"auction:{auctionId}", TimeSpan.FromSeconds(5), async () =>
         {
             var currentHighest = await GetHighestBid(auctionId);

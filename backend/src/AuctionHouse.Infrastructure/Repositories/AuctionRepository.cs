@@ -68,12 +68,12 @@ public class AuctionRepository : IAuctionRepository
         }
     }
 
-    public async Task DeleteAsync(Guid id)
+    public async Task CancelAsync(Guid id)
     {
         var auction = await _context.Auctions.FindAsync(id);
         if (auction is not null)
         {
-            _context.Auctions.Remove(auction);
+            auction.IsCancelled = true;
             await _context.SaveChangesAsync();
         }
     }

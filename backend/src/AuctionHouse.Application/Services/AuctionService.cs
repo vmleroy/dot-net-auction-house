@@ -49,13 +49,13 @@ public class AuctionService : IAuctionService
         return auction;
     }
 
-    public async Task UpdateAsync(Guid id, string itemName, string description, decimal minimumPrice, DateTime endsAt)
+    public async Task UpdateAsync(Guid id, string callerId, string itemName, string description, decimal minimumPrice, DateTime endsAt)
     {
         var auction = await _repository.GetByIdAsync(id)
             ?? throw new KeyNotFoundException($"Auction {id} not found.");
 
-        if (auction.IsPublished)
-            throw new InvalidOperationException("Cannot update a published auction.");
+        if (auction.SellerId != callerId)
+            throw new UnauthorizedAccessException("Only the auction owner can update it.");
 
         if (auction.IsActive && auction.Bids.Count > 0)
             throw new InvalidOperationException("Cannot update an auction that already has bids.");
@@ -68,19 +68,25 @@ public class AuctionService : IAuctionService
         await _repository.UpdateAsync(auction);
     }
 
-    public async Task PublishAsync(Guid id)
+    public async Task PublishAsync(Guid id, string callerId)
     {
         var auction = await _repository.GetByIdAsync(id)
             ?? throw new KeyNotFoundException($"Auction {id} not found.");
+
+        if (auction.SellerId != callerId)
+            throw new UnauthorizedAccessException("Only the auction owner can publish it.");
 
         auction.IsPublished = true;
         await _repository.UpdateAsync(auction);
     }
 
-    public async Task UnpublishAsync(Guid id)
+    public async Task UnpublishAsync(Guid id, string callerId)
     {
         var auction = await _repository.GetByIdAsync(id)
             ?? throw new KeyNotFoundException($"Auction {id} not found.");
+
+        if (auction.SellerId != callerId)
+            throw new UnauthorizedAccessException("Only the auction owner can unpublish it.");
 
         if (auction.IsActive && auction.Bids.Count > 0)
             throw new InvalidOperationException("Cannot unpublish an auction that already has bids.");
@@ -96,14 +102,17 @@ public class AuctionService : IAuctionService
             await _repository.CloseAsync(auction.Id);
     }
 
-    public async Task DeleteAsync(Guid id)
+    public async Task CancelAsync(Guid id, string callerId)
     {
         var auction = await _repository.GetByIdAsync(id)
             ?? throw new KeyNotFoundException($"Auction {id} not found.");
 
-        if (auction.IsPublished)
-            throw new InvalidOperationException("Cannot delete a published auction.");
+        if (auction.SellerId != callerId)
+            throw new UnauthorizedAccessException("Only the auction owner can cancel it.");
 
-        await _repository.DeleteAsync(id);
+        if (auction.IsCancelled)
+            throw new InvalidOperationException("Auction is already cancelled.");
+
+        await _repository.CancelAsync(id);
     }
 }

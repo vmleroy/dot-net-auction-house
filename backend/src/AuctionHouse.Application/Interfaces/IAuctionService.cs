@@ -8,9 +8,9 @@ public interface IAuctionService
     Task<IEnumerable<Auction>> GetAllAsync();
     Task<IEnumerable<Auction>> GetActiveAsync();
     Task<Auction> CreateAsync(string sellerId, string itemName, string description, decimal minimumPrice, DateTime endsAt);
-    Task UpdateAsync(Guid id, string itemName, string description, decimal minimumPrice, DateTime endsAt);
-    Task PublishAsync(Guid id);
-    Task UnpublishAsync(Guid id);
+    Task UpdateAsync(Guid id, string callerId, string itemName, string description, decimal minimumPrice, DateTime endsAt);
+    Task PublishAsync(Guid id, string callerId);
+    Task UnpublishAsync(Guid id, string callerId);
     Task CloseExpiredAsync();
-    Task DeleteAsync(Guid id);
+    Task CancelAsync(Guid id, string callerId);
 }

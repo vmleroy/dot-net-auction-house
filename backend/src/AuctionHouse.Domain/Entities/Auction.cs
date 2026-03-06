@@ -15,7 +15,8 @@ public class Auction
     public DateTime StartedAt { get; set; } = DateTime.UtcNow;
     public DateTime EndsAt { get; set; }
     public bool IsClosed { get; set; } = false;
-    public bool IsActive => IsPublished && !IsClosed && DateTime.UtcNow >= StartedAt && DateTime.UtcNow < EndsAt;
+    public bool IsCancelled { get; set; } = false;
+    public bool IsActive => IsPublished && !IsClosed && !IsCancelled && DateTime.UtcNow >= StartedAt && DateTime.UtcNow < EndsAt;
 
     public List<Bid> Bids { get; set; } = new List<Bid>();
 }

@@ -7,8 +7,6 @@ using AuctionHouse.Application.Interfaces;
 using AuctionHouse.Application.Services;
 using AuctionHouse.Application.Utils;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using StackExchange.Redis;
 using Scalar.AspNetCore;
@@ -30,24 +28,35 @@ builder.Services.AddSingleton<IConnectionMultiplexer>(sp =>
     ConnectionMultiplexer.Connect(builder.Configuration.GetConnectionString("RedisConnection") ?? "localhost:6379"));
 
 // Authentication & Identity
+var jwtSection = builder.Configuration.GetSection("Jwt");
+var jwtSecret = jwtSection["Secret"] ?? throw new InvalidOperationException("JWT Secret not configured");
+var jwtIssuer = jwtSection["Issuer"] ?? "AuctionHouse";
+var jwtAudience = jwtSection["Audience"] ?? "AuctionHouseAudience";
+
 builder.Services.AddAuthentication(options =>
 {
     options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
     options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
 })
-    .AddCookie(IdentityConstants.ApplicationScheme);
+    .AddJwtBearer(options =>
+    {
+        options.TokenValidationParameters = new Microsoft.IdentityModel.Tokens.TokenValidationParameters
+        {
+            ValidateIssuer = true,
+            ValidateAudience = true,
+            ValidateLifetime = true,
+            ValidateIssuerSigningKey = true,
+            ValidIssuer = jwtIssuer,
+            ValidAudience = jwtAudience,
+            IssuerSigningKey = new Microsoft.IdentityModel.Tokens.SymmetricSecurityKey(
+                System.Text.Encoding.UTF8.GetBytes(jwtSecret))
+        };
+    });
 builder.Services.AddAuthorization();
 
 // JWT Token Generator
 builder.Services.AddScoped<JwtTokenGenerator>(sp =>
-{
-    var config = sp.GetRequiredService<IConfiguration>();
-    var jwtSection = config.GetSection("Jwt");
-    var secret = jwtSection["Secret"] ?? throw new InvalidOperationException("JWT Secret not configured");
-    var issuer = jwtSection["Issuer"] ?? "AuctionHouse";
-    var audience = jwtSection["Audience"] ?? "AuctionHouseAudience";
-    return new JwtTokenGenerator(secret, issuer, audience);
-});
+    new JwtTokenGenerator(jwtSecret, jwtIssuer, jwtAudience));
 
 // Repositories & Application Services
 builder.Services.AddScoped<IAuctionRepository, AuctionRepository>();
