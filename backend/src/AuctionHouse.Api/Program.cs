@@ -2,6 +2,7 @@ using AuctionHouse.Domain.Repositories;
 using AuctionHouse.Infrastructure.Data;
 using AuctionHouse.Infrastructure.Services;
 using AuctionHouse.Infrastructure.Repositories;
+using AuctionHouse.Infrastructure.Workers;
 using AuctionHouse.Application.Interfaces;
 using AuctionHouse.Application.Services;
 using AuctionHouse.Application.Utils;
@@ -37,11 +38,6 @@ builder.Services.AddAuthentication(options =>
     .AddCookie(IdentityConstants.ApplicationScheme);
 builder.Services.AddAuthorization();
 
-// Custom services
-builder.Services.AddScoped<ILockService, RedisLockService>();
-builder.Services.AddScoped<IBidCacheService, BidCacheService>();
-builder.Services.AddScoped<IBidService, BidService>();
-
 // JWT Token Generator
 builder.Services.AddScoped<JwtTokenGenerator>(sp =>
 {
@@ -54,12 +50,18 @@ builder.Services.AddScoped<JwtTokenGenerator>(sp =>
 });
 
 // Repositories & Application Services
+builder.Services.AddScoped<IAuctionRepository, AuctionRepository>();
 builder.Services.AddScoped<IRefreshTokenRepository, RefreshTokenRepository>();
 builder.Services.AddScoped<IUserRepository, UserRepository>();
 builder.Services.AddScoped<IBidRepository, BidRepository>();
 
+builder.Services.AddScoped<IAuctionService, AuctionService>();
 builder.Services.AddScoped<IAuthService, AuthService>();
+builder.Services.AddHostedService<AuctionClosingWorker>();
 builder.Services.AddScoped<IRefreshTokenService, RefreshTokenService>();
+builder.Services.AddScoped<ILockService, RedisLockService>();
+builder.Services.AddScoped<IBidCacheService, BidCacheService>();
+builder.Services.AddScoped<IBidService, BidService>();
 
 /**
   *  App

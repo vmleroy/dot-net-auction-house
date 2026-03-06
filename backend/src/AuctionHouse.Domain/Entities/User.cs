@@ -8,6 +8,4 @@ public class User : IdentityUser
 
     public List<Auction> UserAuctions { get; set; } = new List<Auction>();
     public List<Bid> UserBids { get; set; } = new List<Bid>();
-
-    public bool CanAffordBid(decimal amount) => Balance >= amount;
 }
